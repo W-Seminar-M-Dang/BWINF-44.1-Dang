@@ -5,7 +5,7 @@ class Figur:
         self.name = name
         self.dauer = dauer
         self.danach = danach
-        self.stecke = sum([abs(index - (ord(char.lower()) - 97)) for index, char in enumerate(danach)])
+        self.strecke = sum([abs(index - (ord(char.lower()) - 97)) for index, char in enumerate(danach)])
 
     def __eq__(self, other):
         if not isinstance(other, Figur):
@@ -117,23 +117,30 @@ figurenabfolgen = gueltige_figurenkombinationen(figuren, max_takte)
 
 if len(figurenabfolgen) == 0:
     print("Es wurden 0 gültige Kombinationen gefunden.")
-if len(figurenabfolgen) == 1:
+elif len(figurenabfolgen) == 1:
     print("Es wurden 1 gültige Kombinationen gefunden.")
     figurenabfolge_ausgeben(figurenabfolgen[0])
 else:
     print(f"""
 Es wurden {len(figurenabfolgen)} gültige Kombinationen gefunden.
-wähle zwischen:
 
-    (1) Möglichst viele unterschiedliche Figuren
-    (2) Möglichst viele Figuren
-    (3) Möglichst wenige Figuren
-    (4) Zurückgelegte Strecke aller Tanzenden insgesamt möglichst groß
-    (5) Zurückgelegte Strecke aller Tanzenden insgesamt möglichst klein
-    """)
-sonderfall_index = input("Wähle eine Strategie (1-5): ")
+Es wird die beste Kombination in den folgenden Kathegorien ausgegeben:""")
 
-figurenabfolge_ausgeben(strategien[int(sonderfall_index) - 1](figurenabfolgen))
+    print("(1) Möglichst viele unterschiedliche Figuren:")
+    figurenabfolge_ausgeben(max_unterschiedliche_figuren(figurenabfolgen))
+
+    print("(2) Möglichst viele Figuren:")
+    figurenabfolge_ausgeben(max_figuren(figurenabfolgen))
+
+    print("(3) Möglichst wenige Figuren:")
+    figurenabfolge_ausgeben(min_figuren(figurenabfolgen))
+
+    print("(4) Zurückgelegte Strecke aller Tanzenden insgesamt möglichst groß:")
+    figurenabfolge_ausgeben(max_strecke(figurenabfolgen))
+
+    print("(5) Zurückgelegte Strecke aller Tanzenden insgesamt möglichst klein:")
+    figurenabfolge_ausgeben(min_strecke(figurenabfolgen))
+
 
 #C:\Users\matth\Downloads\choreo01.txt
 #https://stackoverflow.com/questions/1227121/compare-object-instances-for-equality-by-their-attributes
