@@ -1,7 +1,7 @@
 import sys
 
 class Node:
-    """Stellt Knoten des Baumes dar"""
+    """Object for node in tree with width (1/real relative width), subtree, and depth"""
 
     def __init__(self, width, depth, subtree_str):
         self.width = width
