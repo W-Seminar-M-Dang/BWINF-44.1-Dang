@@ -1,3 +1,5 @@
+import sys
+
 class Node:
     """Stellt Knoten des Baumes dar"""
 
@@ -18,6 +20,7 @@ class Node:
         return hash((self.width, self.depth, self.subtree_str))
 
 
+
 def find_leaves(root_node):
     """Returns list of all leaves in order from left to right"""
     leaves = []
@@ -25,7 +28,7 @@ def find_leaves(root_node):
     def search(node):
         """Searches recursively the subtree, adds child node to leaves if child node is a leaf"""
 
-        sibling_nodes_subtree_str = []
+        child_nodes_subtrees = []
         bracket_counter = 0
         child_nodes_counter = 0
         child_node_start = 0
@@ -37,25 +40,22 @@ def find_leaves(root_node):
                 bracket_counter -= 1
                 if bracket_counter == 0:
                     child_nodes_counter += 1
-                    sibling_nodes_subtree_str.append(node.subtree_str[child_node_start + 1 : bracket_index])
+                    child_nodes_subtrees.append(node.subtree_str[child_node_start + 1 : bracket_index])
                     child_node_start = bracket_index + 1
 
-        for node_subtree_str in sibling_nodes_subtree_str:
-            if node_subtree_str == "":
+        for child_subtree in child_nodes_subtrees:
+            if child_subtree == "":
                 leaves.append(Node(node.width * child_nodes_counter, node.depth + 1, ""))
             else:
-                search(Node(node.width * child_nodes_counter, node.depth + 1, node_subtree_str))
+                search(Node(node.width * child_nodes_counter, node.depth + 1, child_subtree))
 
     search(root_node)
     return leaves
 
-input1 = input("")
 
 if __name__ == "__main__":
+    with open(sys.argv[1], "r") as my_file:
+        tree = my_file.read().strip()
 
-    leaves1 = find_leaves(Node(1, 0, input1[1:-1]))
+    leaves1 = find_leaves(Node(1, 0, tree[1:-1]))
     print(leaves1 == leaves1[::-1])
-
-
-
-#https://stackoverflow.com/questions/3705670/best-way-to-create-a-reversed-list-in-python
