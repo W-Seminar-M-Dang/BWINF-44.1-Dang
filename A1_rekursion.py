@@ -1,0 +1,61 @@
+class Node:
+    """Stellt Knoten des Baumes dar"""
+
+    def __init__(self, width, depth, subtree_str):
+        self.width = width
+        self.depth = depth
+        self.subtree_str = subtree_str
+
+    # Ermöglicht Vergleich von Knoten, bei Prüfung der Symmetrie nützlich
+    def __eq__(self, other):
+        if not isinstance(other, Node):
+            return NotImplemented
+        return (self.width == other.width and
+                self.depth == other.depth and
+                self.subtree_str == other.subtree_str)
+
+    def __hash__(self):
+        return hash((self.width, self.depth, self.subtree_str))
+
+
+def find_leaves(root_node):
+    """Returns list of all leaves in order from left to right"""
+    leaves = []
+
+    def search(node):
+        """Searches recursively the subtree, adds child node to leaves if child node is a leaf"""
+
+        sibling_nodes_subtree_str = []
+        bracket_counter = 0
+        child_nodes_counter = 0
+        child_node_start = 0
+
+        for bracket_index in range(len(node.subtree_str)):
+            if node.subtree_str[bracket_index] == "(":
+                bracket_counter += 1
+            elif node.subtree_str[bracket_index] == ")":
+                bracket_counter -= 1
+                if bracket_counter == 0:
+                    child_nodes_counter += 1
+                    sibling_nodes_subtree_str.append(node.subtree_str[child_node_start + 1 : bracket_index])
+                    child_node_start = bracket_index + 1
+
+        for node_subtree_str in sibling_nodes_subtree_str:
+            if node_subtree_str == "":
+                leaves.append(Node(node.width * child_nodes_counter, node.depth + 1, ""))
+            else:
+                search(Node(node.width * child_nodes_counter, node.depth + 1, node_subtree_str))
+
+    search(root_node)
+    return leaves
+
+input1 = input("")
+
+if __name__ == "__main__":
+
+    leaves1 = find_leaves(Node(1, 0, input1[1:-1]))
+    print(leaves1 == leaves1[::-1])
+
+
+
+#https://stackoverflow.com/questions/3705670/best-way-to-create-a-reversed-list-in-python
