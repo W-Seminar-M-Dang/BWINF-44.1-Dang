@@ -1,147 +1,165 @@
-#from itertools import combinations
+import sys
 
-class Figur:
-    def __init__(self, name, dauer : int, danach):
+class Routine:
+    """Klasse für Bewegungen in einer Choreografie mit Name, Dauer und Position nach der Ausführung beginnend mit ABCDEFGHIKLMNOP"""
+    
+    def __init__(self, name, duration : int, pos_after):
         self.name = name
-        self.dauer = dauer
-        self.danach = danach
-        self.strecke = sum([abs(index - (ord(char.lower()) - 97)) for index, char in enumerate(danach)])
+        self.duration = duration
+        self.pos_after = pos_after
+        
+        # Summe von allen Tänzern zurückgelegten Strecke:
+        # Differenz zwischen aktueller Position (Index) und ursprünglicher Startposition (ord(char.lower()) - 97)
+        # ord(char.lower()) - 97 gibt Position im Alphabet zurück: a = 0, b = 1, c = 2 ...
+        self.sum_dancer_overall_distance = sum([abs(index - (ord(char.lower()) - 97)) for index, char in enumerate(pos_after)])
 
     def __eq__(self, other):
-        if not isinstance(other, Figur):
+        if not isinstance(other, Routine):
             return NotImplemented
         return (self.name == other.name and
-                self.dauer == other.dauer and
-                self.danach == other.danach)
+                self.duration == other.duration and
+                self.pos_after == other.pos_after)
 
     def __hash__(self):
-        return hash((self.name, self.dauer, self.danach))
+        return hash((self.name, self.duration, self.pos_after))
 
-    def __str__(self):
-        return self.name
+    
+starting_position = "ABCDEFGHIJKLMNOP"
+    
+    
+def execute_routine(routine, initial_pos):
+    """Gibt Position nach Ausführung der Routine ab initial_pos zurück"""
+    new_pos = ""
+    for dancer in routine.pos_after:
+        new_pos += initial_pos[ord(dancer.lower()) - 97] # new_pos ist ein String; jeder Buchstabe wird dazu konkateniert (Fachbegriffe immer toll :) )
+    return new_pos
 
-def figur_ausfueren(zu_tun, position):
-    neue_position = ""
-    for buchstabe in zu_tun.danach:
-        neue_position += position[ord(buchstabe.lower()) - 97]
-    return neue_position
+def find_choreos(routines, choreo_length):
+    """Findet alle Kombinationen von Routinen, mit richtiger Dauer und die Endposition die Startposition ist"""
+    choreos = []
 
-def gueltige_figurenkombinationen(figuren_liste, ziel_summe):
-    kombinationen = []
+    def search(combination, rest_sum):
 
-    def suche(kombination, rest_summe):
+        # Testet ob Choreo mit richtiger Länge wieder auf Startposition zurückkehrt
+        if rest_sum == 0:
+            current_position = starting_position
+            for routine in combination:
+                current_position = execute_routine(routine, current_position)
+            if starting_position == current_position:
+                choreos.append(tuple(combination))
 
-        if rest_summe == 0:
-            stellung = startanordnung
-            for fig in kombination:
-                stellung = figur_ausfueren(fig, stellung)
-            if startanordnung == stellung:
-                kombinationen.append(tuple(kombination))
+        if rest_sum > 0:
+            for routine in routines:
+                new_combination = combination[:]
+                new_combination.append(routine)
+                search(new_combination, rest_sum - routine.duration)
 
-        if rest_summe > 0:
-            for fi in figuren_liste:
-                kombination.append(fi)
-                suche(kombination, rest_summe - fi.dauer)
-                kombination.pop()
+    search([], choreo_length)
+    return choreos
 
-    suche([], ziel_summe)
-    return kombinationen
+def get_routines(routines_strings):
+    """Gibt Liste von Routinen als Objekt der Klasse Routine zurück, aus Strings der Routinen aus geöffneter Datei"""
 
-def figurenabfolge_ausgeben(figurenabfolge):
-    print("\n")
-    for figuren_index in range(len(figurenabfolge)):
-        print(f"{figuren_index}. {figurenabfolge[figuren_index]}")
-    print("\n")
+    routines = []
+    for routine_str in routines_strings:
+        routine_name = routine_str.split(" ")[0]
+        routine_duration = int(routine_str.split(" ")[1])
+        routine_pos_after = routine_str.split(" ")[2]
+        routines.append(Routine(routine_name, routine_duration, routine_pos_after))
 
-datei_pfad = input("Pfad zur Datei eingeben: ")
+    return routines
 
-with open(datei_pfad) as datei:
-    choreographie = datei.read()
+# Sonderfälle:
+# return first item of the list that meets condition, if more than 1 meet the same condition
 
-zeile = choreographie.split("\n")
+def max_different_routines(choreos):
+    """Sucht nach Choreos mit den meisten unterschiedlichen Routinen und gibt eine zurück"""
 
-max_takte = int(zeile[0])
-figuren_anzahl = int(zeile[1])
-startanordnung = "ABCDEFGHIJKLMNOP"
-figuren = []
+    best_value = max(len(list(set(choreo))) for choreo in choreos) # list(set()), um doppelte Routinen zu entfernen,
+    for choreo in choreos:
+        if len(list(set(choreo))) == best_value:
+            return choreo
+    return None
 
-for figur in zeile[2:2 + figuren_anzahl]:
-    figuren.append(Figur(figur.split(" ")[0], int(figur.split(" ")[1]), figur.split(" ")[2]))
+def max_routines(choreos):
+    """Sucht nach Choreos mit den meisten Routinen und gibt eine zurück"""
 
+    best_value = max(len(choreo) for choreo in choreos)
+    for choreo in choreos:
+        if len(choreo) == best_value:
+            return choreo
+    return None
 
-def max_unterschiedliche_figuren(alle_kombinationen):
-    bester_wert = max(len(list(set(x))) for x in alle_kombinationen)
-    for kombination in alle_kombinationen:
-        if len(list(set(kombination))) == bester_wert:
-            return kombination
+def min_routines(choreos):
+    """Sucht nach Choreo mit den wenigsten Routinen und gibt eine zurück"""
+
+    best_value = min(len(choreo) for choreo in choreos)
+    for choreo in choreos:
+        if len(choreo) == best_value:
+            return choreo
+    return None
+
+def max_distance(choreos):
+    """Sucht nach Choreo mit der größten von den Tänzern zurückgelegten Strecke und gibt eine zurück"""
+
+    # Maximum aller Summen der von Tänzern zurückgelegten Strecken in jeder gültigen Choreo
+    best_value = max(sum(routine.sum_dancer_overall_distance for routine in choreo) for choreo in choreos)
+
+    for choreo in choreos:
+        if sum(routine.sum_dancer_overall_distance for routine in choreo) == best_value:
+            return choreo
+    return None
+
+def min_distance(choreos):
+    """Sucht nach Choreo mit der kleinsten von den Tänzern zurückgelegten Strecke und gibt eine zurück"""
+
+    # Minimum aller Summen der von Tänzern zurückgelegten Strecken in jeder gültigen Choreo
+    best_value = min(sum(routine.sum_dancer_overall_distance for routine in choreo) for choreo in choreos)
+
+    for choreo in choreos:
+        if sum(routine.sum_dancer_overall_distance for routine in choreo) == best_value:
+            return choreo
     return None
 
 
-def max_figuren(alle_kombinationen):
-    bester_wert = max(len(x) for x in alle_kombinationen)
-    for kombination in alle_kombinationen:
-        if len(kombination) == bester_wert:
-            return kombination
-    return None
+if __name__ == "__main__":
 
-def min_figuren(alle_kombinationen):
-    bester_wert = min(len(x) for x in alle_kombinationen)
-    for kombination in alle_kombinationen:
-        if len(kombination) == bester_wert:
-            return kombination
-    return None
+    # Dateipfad als Terminalargument
+    with open(sys.argv[1], "r") as my_file:
+        piece_of_music = my_file.read().strip()
 
-def max_strecke(alle_kombinationen):
-    bester_wert = max(sum(y.strecke for y in x) for x in alle_kombinationen)
-    for kombination in alle_kombinationen:
-        if sum(y.strecke for y in kombination) == bester_wert:
-            return kombination
-    return None
+    lines = piece_of_music.splitlines()
+    piece_length = int(lines[0])
+    routines_number = int(lines[1])
+    routines_piece_of_music = get_routines(lines[2:2 + routines_number])
 
-def min_strecke(alle_kombinationen):
-    bester_wert = min(sum(y.strecke for y in x) for x in alle_kombinationen)
-    for kombination in alle_kombinationen:
-        if sum(y.strecke for y in kombination) == bester_wert:
-            return kombination
-    return None
+    valid_choreos = find_choreos(routines_piece_of_music, piece_length)
 
 
-strategien = [
-    max_unterschiedliche_figuren,
-    max_figuren,
-    min_figuren,
-    max_strecke,
-    min_strecke]
+    def print_choreo(choreo):
+        """gibt Namen aller Routinen/Figuren in der Choreo aus"""
 
-figurenabfolgen = gueltige_figurenkombinationen(figuren, max_takte)
+        for routine_index in range(len(choreo)):
+            print(f"{routine_index}. {choreo[routine_index].name}")
+        print("\n")
 
-if len(figurenabfolgen) == 0:
-    print("Es wurden 0 gültige Kombinationen gefunden.")
-elif len(figurenabfolgen) == 1:
-    print("Es wurden 1 gültige Kombinationen gefunden.")
-    figurenabfolge_ausgeben(figurenabfolgen[0])
-else:
-    print(f"""
-Es wurden {len(figurenabfolgen)} gültige Kombinationen gefunden.
+    if len(valid_choreos) == 0:
+        print("Keine gültigen Choreographien gefunden")
+    elif len(valid_choreos) == 1:
+        print("Es wurde 1 gültige Choreographie gefunden:")
+        print_choreo(valid_choreos[0])
+    else:
+        print("Choreo mit möglichst viele unterschiedliche Figuren:\n")
+        print_choreo(max_different_routines(valid_choreos))
 
-Es wird die beste Kombination in den folgenden Kathegorien ausgegeben:""")
+        print("Choreo mit möglichst viele Figuren:\n")
+        print_choreo(max_routines(valid_choreos))
 
-    print("(1) Möglichst viele unterschiedliche Figuren:")
-    figurenabfolge_ausgeben(max_unterschiedliche_figuren(figurenabfolgen))
+        print("Choreo mit möglichst wenige Figuren:\n")
+        print_choreo(min_routines(valid_choreos))
 
-    print("(2) Möglichst viele Figuren:")
-    figurenabfolge_ausgeben(max_figuren(figurenabfolgen))
+        print("Choreo mit von allen Tanzenden zurückgelegte Distanz möglichst groß:\n")
+        print_choreo(max_distance(valid_choreos))
 
-    print("(3) Möglichst wenige Figuren:")
-    figurenabfolge_ausgeben(min_figuren(figurenabfolgen))
-
-    print("(4) Zurückgelegte Strecke aller Tanzenden insgesamt möglichst groß:")
-    figurenabfolge_ausgeben(max_strecke(figurenabfolgen))
-
-    print("(5) Zurückgelegte Strecke aller Tanzenden insgesamt möglichst klein:")
-    figurenabfolge_ausgeben(min_strecke(figurenabfolgen))
-
-
-#C:\Users\matth\Downloads\choreo01.txt
-#https://stackoverflow.com/questions/1227121/compare-object-instances-for-equality-by-their-attributes
-#https://stackoverflow.com/questions/6764909/how-to-remove-all-duplicate-items-from-a-list
+        print("Choreo mit von allen Tanzenden zurückgelegte Distanz möglichst klein:\n")
+        print_choreo(min_distance(valid_choreos))

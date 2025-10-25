@@ -55,7 +55,6 @@ def schnittpunkt_lot_durch_punkt_strecke(strecke, punkt):
     schnittpunkt_strecke_lot = schnittpunkt(strecke.normalensteigung(), y_achsenabschnitt_lot, strecke.steigung, strecke.y_achsenabschnitt)
     return schnittpunkt_strecke_lot
 
-
 def ist_auf_strecke(strecke, punkt):
     if strecke.steigung == float("inf"):
         return punkt[0] == strecke.y_achsenabschnitt and (min(strecke.endpunkt[1], strecke.startpunkt[1]) <= punkt[1] <= max(strecke.endpunkt[1], strecke.startpunkt[1]))
