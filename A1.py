@@ -33,12 +33,13 @@ def find_leaves(root_node):
         child_nodes_counter = 0
         child_node_start = 0
 
+        # adds all subtrees of child notes to child_nodes_subtrees
         for bracket_index in range(len(node.subtree_str)):
             if node.subtree_str[bracket_index] == "(":
                 bracket_counter += 1
             elif node.subtree_str[bracket_index] == ")":
                 bracket_counter -= 1
-                if bracket_counter == 0:
+                if bracket_counter == 0: # means that
                     child_nodes_counter += 1
                     child_nodes_subtrees.append(node.subtree_str[child_node_start + 1 : bracket_index])
                     child_node_start = bracket_index + 1
@@ -54,8 +55,15 @@ def find_leaves(root_node):
 
 
 if __name__ == "__main__":
+
+    # File path as terminal argument
     with open(sys.argv[1], "r") as my_file:
         tree = my_file.read().strip()
 
     leaves1 = find_leaves(Node(1, 0, tree[1:-1]))
-    print(leaves1 == leaves1[::-1])
+
+    # checks if reverted tree is the same
+    if leaves1 == leaves1[::-1]:
+        print("Der Baum ist Drehfreudig")
+    else:
+        print("Der Baum ist nicht Drehfreudig")
