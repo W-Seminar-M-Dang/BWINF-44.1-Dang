@@ -1,5 +1,6 @@
 import sys
 
+
 class Routine:
     """Klasse für Bewegungen in einer Choreografie mit Name, Dauer und Position nach der Ausführung beginnend mit ABCDEFGHIKLMNOP"""
     
@@ -13,14 +14,14 @@ class Routine:
         # ord(char.lower()) - 97 gibt Position im Alphabet zurück: a = 0, b = 1, c = 2 ...
         self.sum_dancer_overall_distance = sum([abs(index - (ord(char.lower()) - 97)) for index, char in enumerate(pos_after)])
 
-    def __eq__(self, other):
+    def __eq__(self, other): # damit zwei Figuren mit == verglichen werden können
         if not isinstance(other, Routine):
             return NotImplemented
         return (self.name == other.name and
                 self.duration == other.duration and
                 self.pos_after == other.pos_after)
 
-    def __hash__(self):
+    def __hash__(self): # damit man Routine in ein Set hinzufügen darf
         return hash((self.name, self.duration, self.pos_after))
 
     
@@ -31,31 +32,37 @@ def execute_routine(routine, initial_pos):
     """Gibt Position nach Ausführung der Routine ab initial_pos zurück"""
     new_pos = ""
     for dancer in routine.pos_after:
-        new_pos += initial_pos[ord(dancer.lower()) - 97] # new_pos ist ein String; jeder Buchstabe wird dazu konkateniert (Fachbegriffe immer toll :) )
+        new_pos += initial_pos[ord(dancer.lower()) - 97] # new_pos ist ein String; jeder Tänzer (Buchstabe) wird zum neuen Platz in der richtigen Reihenfolge dazu konkateniert (Fachbegriffe sind immer toll :))
     return new_pos
 
+
 def find_choreos(routines, choreo_length):
-    """Findet alle Kombinationen von Routinen, mit richtiger Dauer und die Endposition die Startposition ist"""
-    choreos = []
+    seen = set()
+    results = []
 
-    def search(combination, rest_sum):
+    def search(current_position, rest_sum, combination):
+        if rest_sum < 0:
+            return
 
-        # Testet ob Choreo mit richtiger Länge wieder auf Startposition zurückkehrt
         if rest_sum == 0:
-            current_position = starting_position
-            for routine in combination:
-                current_position = execute_routine(routine, current_position)
-            if starting_position == current_position:
-                choreos.append(tuple(combination))
+            if current_position == starting_position:
+                results.append(list(combination))
+            return
 
-        if rest_sum > 0:
-            for routine in routines:
-                new_combination = combination[:]
-                new_combination.append(routine)
-                search(new_combination, rest_sum - routine.duration)
+        state = (current_position, rest_sum, len(combination), set(combination))
+        if state in seen:
+            return
+        seen.add(state)
 
-    search([], choreo_length)
-    return choreos
+        for routine in routines:
+            combination.append(routine)
+            new_position = execute_routine(routine, current_position)
+            search(new_position, rest_sum - routine.duration, combination)
+            combination.pop()
+
+    search(starting_position, choreo_length, [])
+    return results
+
 
 def get_routines(routines_strings):
     """Gibt Liste von Routinen als Objekt der Klasse Routine zurück, aus Strings der Routinen aus geöffneter Datei"""
@@ -70,12 +77,12 @@ def get_routines(routines_strings):
     return routines
 
 # Sonderfälle:
-# return first item of the list that meets condition, if more than 1 meet the same condition
 
 def max_different_routines(choreos):
     """Sucht nach Choreos mit den meisten unterschiedlichen Routinen und gibt eine zurück"""
 
     best_value = max(len(list(set(choreo))) for choreo in choreos) # list(set()), um doppelte Routinen zu entfernen,
+    print(best_value)
     for choreo in choreos:
         if len(list(set(choreo))) == best_value:
             return choreo
@@ -85,6 +92,7 @@ def max_routines(choreos):
     """Sucht nach Choreos mit den meisten Routinen und gibt eine zurück"""
 
     best_value = max(len(choreo) for choreo in choreos)
+    print(best_value)
     for choreo in choreos:
         if len(choreo) == best_value:
             return choreo
@@ -94,6 +102,7 @@ def min_routines(choreos):
     """Sucht nach Choreo mit den wenigsten Routinen und gibt eine zurück"""
 
     best_value = min(len(choreo) for choreo in choreos)
+    print(best_value)
     for choreo in choreos:
         if len(choreo) == best_value:
             return choreo
@@ -104,6 +113,7 @@ def max_distance(choreos):
 
     # Maximum aller Summen der von Tänzern zurückgelegten Strecken in jeder gültigen Choreo
     best_value = max(sum(routine.sum_dancer_overall_distance for routine in choreo) for choreo in choreos)
+    print(best_value)
 
     for choreo in choreos:
         if sum(routine.sum_dancer_overall_distance for routine in choreo) == best_value:
@@ -115,6 +125,7 @@ def min_distance(choreos):
 
     # Minimum aller Summen der von Tänzern zurückgelegten Strecken in jeder gültigen Choreo
     best_value = min(sum(routine.sum_dancer_overall_distance for routine in choreo) for choreo in choreos)
+    print(best_value)
 
     for choreo in choreos:
         if sum(routine.sum_dancer_overall_distance for routine in choreo) == best_value:
