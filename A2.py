@@ -39,6 +39,7 @@ def execute_routine(routine, initial_pos):
 def find_choreos(routines, choreo_length):
     seen = set()
     results = []
+    single_choreo = True
 
     def search(current_position, rest_sum, combination):
         if rest_sum < 0:
@@ -49,8 +50,9 @@ def find_choreos(routines, choreo_length):
                 results.append(list(combination))
             return
 
-        state = (current_position, rest_sum, len(combination), set(combination))
+        state = (current_position, rest_sum, len(combination), frozenset(combination))
         if state in seen:
+            single_choreo = False
             return
         seen.add(state)
 
@@ -61,7 +63,7 @@ def find_choreos(routines, choreo_length):
             combination.pop()
 
     search(starting_position, choreo_length, [])
-    return results
+    return results, single_choreo
 
 
 def get_routines(routines_strings):
@@ -144,7 +146,7 @@ if __name__ == "__main__":
     routines_number = int(lines[1])
     routines_piece_of_music = get_routines(lines[2:2 + routines_number])
 
-    valid_choreos = find_choreos(routines_piece_of_music, piece_length)
+    valid_choreos, only_one_choreo = find_choreos(routines_piece_of_music, piece_length)
 
 
     def print_choreo(choreo):
@@ -156,7 +158,7 @@ if __name__ == "__main__":
 
     if len(valid_choreos) == 0:
         print("Keine gültigen Choreographien gefunden")
-    elif len(valid_choreos) == 1:
+    elif len(valid_choreos) == 1 and only_one_choreo == True:
         print("Es wurde 1 gültige Choreographie gefunden:")
         print_choreo(valid_choreos[0])
     else:
