@@ -155,10 +155,10 @@ if __name__ == "__main__":
         current_lake_start_index += (current_lake_length + 1) # zum nächsten See gehen
 
 
-shortest_leash_possible = math.inf
+    shortest_leash_possible = math.inf
 
-for path in paths:
-    for lakeshore in lakeshores:
-        shortest_leash_possible = min(shortest_leash_possible, smallest_distance(path, lakeshore))
+    for path in paths:
+        for lakeshore in lakeshores:
+            shortest_leash_possible = min(shortest_leash_possible, smallest_distance(path, lakeshore))
 
-print(shortest_leash_possible)
+    print(shortest_leash_possible)
