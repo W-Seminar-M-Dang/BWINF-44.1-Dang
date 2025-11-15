@@ -14,13 +14,6 @@ class Routine:
         # ord(char.lower()) - 97 gibt Position im Alphabet zurück: a = 0, b = 1, c = 2 ...
         self.sum_dancer_overall_distance = sum([abs(index - (ord(char.lower()) - 97)) for index, char in enumerate(pos_after)])
 
-    def __eq__(self, other): # damit zwei Figuren mit == verglichen werden können
-        if not isinstance(other, Routine):
-            return NotImplemented
-        return (self.name == other.name and
-                self.duration == other.duration and
-                self.pos_after == other.pos_after)
-
     def __hash__(self): # damit man Routine in ein Set hinzufügen darf
         return hash((self.name, self.duration, self.pos_after))
 
@@ -32,22 +25,25 @@ def execute_routine(routine, initial_pos):
     """Gibt Position nach Ausführung der Routine ab initial_pos zurück"""
     new_pos = ""
     for dancer in routine.pos_after:
+        # ord(char.lower()) - 97 gibt Position im Alphabet zurück: a = 0, b = 1, c = 2 ...
         new_pos += initial_pos[ord(dancer.lower()) - 97] # new_pos ist ein String; jeder Tänzer (Buchstabe) wird zum neuen Platz in der richtigen Reihenfolge dazu konkateniert (Fachbegriffe sind immer toll :))
     return new_pos
 
 
 def find_choreos(routines, choreo_length):
     seen = set()
-    results = []
+    legal_choreos = []
     single_choreo = True
 
     def search(current_position, rest_sum, combination):
+        nonlocal single_choreo
+
         if rest_sum < 0:
             return
 
         if rest_sum == 0:
             if current_position == starting_position:
-                results.append(list(combination))
+                legal_choreos.append(list(combination))
             return
 
         state = (current_position, rest_sum, len(combination), frozenset(combination))
@@ -63,7 +59,7 @@ def find_choreos(routines, choreo_length):
             combination.pop()
 
     search(starting_position, choreo_length, [])
-    return results, single_choreo
+    return legal_choreos, single_choreo
 
 
 def get_routines(routines_strings):
