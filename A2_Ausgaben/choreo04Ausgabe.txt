@@ -1,0 +1,83 @@
+Choreo mit möglichst viele unterschiedliche Figuren:
+
+6
+0. Aida
+1. Fan
+2. Fan
+3. Hover
+4. Fan
+5. Hockey_Stick
+6. Fan
+7. Fan
+8. Fan
+9. Fan
+10. Appel
+11. Bounce
+
+
+Choreo mit möglichst viele Figuren:
+
+12
+0. Aida
+1. Fan
+2. Fan
+3. Hover
+4. Fan
+5. Hockey_Stick
+6. Fan
+7. Fan
+8. Fan
+9. Fan
+10. Appel
+11. Bounce
+
+
+Choreo mit möglichst wenige Figuren:
+
+12
+0. Aida
+1. Fan
+2. Fan
+3. Hover
+4. Fan
+5. Hockey_Stick
+6. Fan
+7. Fan
+8. Fan
+9. Fan
+10. Appel
+11. Bounce
+
+
+Choreo mit von allen Tanzenden zurückgelegte Distanz möglichst groß:
+
+1154
+0. Aida
+1. Fan
+2. Fan
+3. Hover
+4. Fan
+5. Hockey_Stick
+6. Fan
+7. Fan
+8. Fan
+9. Fan
+10. Appel
+11. Bounce
+
+
+Choreo mit von allen Tanzenden zurückgelegte Distanz möglichst klein:
+
+1154
+0. Aida
+1. Fan
+2. Fan
+3. Hover
+4. Fan
+5. Hockey_Stick
+6. Fan
+7. Fan
+8. Fan
+9. Fan
+10. Appel
+11. Bounce
