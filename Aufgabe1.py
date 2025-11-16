@@ -68,7 +68,7 @@ class DrawTree:
         self.width = 100 * self.thinnest_node_value
         self.height = (self.depth + 1) * 100
         # Breite normal, Höhe verdoppelt (oben + unten)
-        self.svgpath =os.path.join(os.path.dirname(__file__), "A1_Bilder", f"{self.tree_name}.svg")
+        self.svgpath =os.path.join(os.path.dirname(__file__), "Aufgabe1_Bilder", f"{self.tree_name}.svg")
         self.drawing = svgwrite.Drawing(self.svgpath, size=(self.width, self.height * 2))
         self.lines = []
 
