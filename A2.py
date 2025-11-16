@@ -46,7 +46,7 @@ def find_choreos(routines, choreo_length):
                 legal_choreos.append(list(combination))
             return
 
-        state = (current_position, rest_sum, len(combination), frozenset(combination))
+        state = (current_position, rest_sum, len(combination), frozenset(combination), sum([routine.sum_dancer_overall_distance for routine in combination]))
         if state in seen:
             single_choreo = False
             return
