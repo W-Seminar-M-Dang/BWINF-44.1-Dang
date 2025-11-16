@@ -19,7 +19,7 @@ class Line:
         if p0.x == p1.x:
             self.steepness = math.inf
         else:
-            self.steepness = (p0.y - p1.y) / (p0.x - p1.x) # calculating steepness of line with dy / dx
+            self.steepness = (p0.y - p1.y) / (p0.x - p1.x) # berechnung der Steigung durch dx/dy
 
         # Lineare Funktion: f(y) = mx + t; y_achsenabschnitt auf engl. y-intercept
 
@@ -29,14 +29,14 @@ class Line:
         else:
             self.y_intercept = p0.y - (p0.x * self.steepness) # y1 = m * x1 + t -> t = y1 - (m * x1)
 
-        # Findet Steigung der Normalen, normale immer senkrecht zur Tangente
+        # Findet Steigung der Senkrechten, immer senkrecht zur Tangente
 
         if self.steepness == math.inf:
-            self.normal_steepness = 0.0 # senkrecht zur y-achse ist paralell zur x-achse
+            self.perp_steepness = 0.0 # senkrecht zur y-achse ist paralell zur x-achse
         elif self.steepness == 0.0:
-            self.normal_steepness = math.inf # senkrecht zur x-achse ist paralell zur y-achse
+            self.perp_steepness = math.inf # senkrecht zur x-achse ist paralell zur y-achse
         else:
-            self.normal_steepness = -1/self.steepness
+            self.perp_steepness = -1 / self.steepness
 
 def intersection(line0_steepness, line0_y_intercept, line1_steepness, line1_y_intercept):
     """Gibt x und y-koordinate des Schnittpunktes zurück, falls keiner vorhanden: return None"""
@@ -61,14 +61,14 @@ def distance(p0, p1):
 def intersection_perpendicular_line_point(line, point):
     """Berechnet Schnittpunkt vom Lot gefällt durch point auf line und line"""
 
-    # y-Achsenabschnitt der Normalen berechnen um in intersection() enizusetzen
-    if line.normal_steepness == math.inf:
-        normal_y_intercept = point.x # (siehe Zeile 27)
+    # y-Achsenabschnitt der Senkrechten berechnen um in intersection() enizusetzen
+    if line.perp_steepness == math.inf:
+        perp_y_intercept = point.x # (siehe Zeile 27)
     else:
-        normal_y_intercept = point.y - (point.x * line.normal_steepness) # y = m * x + t -> t = y - (m * x)
+        perp_y_intercept = point.y - (point.x * line.perp_steepness) # y = m * x + t -> t = y - (m * x)
 
     # in intersection() einsetzen
-    return intersection(line.steepness, line.y_intercept, line.normal_steepness, normal_y_intercept)
+    return intersection(line.steepness, line.y_intercept, line.perp_steepness, perp_y_intercept)
 
 def is_on_line(line, point):
     if line.steepness == math.inf:
