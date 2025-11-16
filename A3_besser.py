@@ -80,7 +80,7 @@ def is_on_line(line, point):
 
 def distance_line_perpendicular_line(line, point):
     """Distanz zischen point und Schnittpunkt vom Lot gefällt durch point auf line und line"""
-    other_point = intersection_perpendicular_line_point(line, point) # Schnittpunkt Lot gefällt durch point auf Linie
+    other_point = intersection_perpendicular_line_point(line, point) # Lotfußpunkt
 
     if other_point is None:
         return None
