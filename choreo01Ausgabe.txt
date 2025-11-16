@@ -1,0 +1,89 @@
+Choreo mit möglichst viele unterschiedliche Figuren:
+
+2
+0. Cast_Four
+1. Cast_Four
+2. Cast_Four
+3. Cast_Four
+4. Cast_Four
+5. Cast_Up
+6. Cast_Four
+7. Cast_Up
+8. Cast_Four
+9. Cast_Up
+10. Cast_Four
+11. Cast_Up
+
+
+Choreo mit möglichst viele Figuren:
+
+16
+0. Cast_Four
+1. Cast_Four
+2. Cast_Four
+3. Cast_Four
+4. Cast_Four
+5. Cast_Four
+6. Cast_Four
+7. Cast_Four
+8. Cast_Four
+9. Cast_Four
+10. Cast_Four
+11. Cast_Four
+12. Cast_Four
+13. Cast_Four
+14. Cast_Four
+15. Cast_Four
+Choreo mit möglichst wenige Figuren:
+
+12
+0. Cast_Four
+1. Cast_Four
+2. Cast_Four
+3. Cast_Four
+4. Cast_Four
+5. Cast_Up
+6. Cast_Four
+7. Cast_Up
+8. Cast_Four
+9. Cast_Up
+10. Cast_Four
+11. Cast_Up
+
+
+Choreo mit von allen Tanzenden zurückgelegte Distanz möglichst groß:
+
+384
+0. Cast_Four
+1. Cast_Four
+2. Cast_Four
+3. Cast_Four
+4. Cast_Four
+5. Cast_Four
+6. Cast_Four
+7. Cast_Four
+8. Cast_Four
+9. Cast_Four
+10. Cast_Four
+11. Cast_Four
+12. Cast_Four
+13. Cast_Four
+14. Cast_Four
+15. Cast_Four
+
+
+Choreo mit von allen Tanzenden zurückgelegte Distanz möglichst klein:
+
+312
+0. Cast_Four
+1. Cast_Four
+2. Cast_Four
+3. Cast_Four
+4. Cast_Four
+5. Cast_Up
+6. Cast_Four
+7. Cast_Up
+8. Cast_Four
+9. Cast_Up
+10. Cast_Four
+11. Cast_Up
