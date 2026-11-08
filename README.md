@@ -7,5 +7,5 @@ Es ist zu achten, dass der Python-Interpreter sich im PATH befindet. Je nach Bet
 
 ## Ausführen des Rust-Projekts von Yan Amin
 Zum ausführen des Programmes von Junioraufgabe 1, öffnet man im Terminal den Pfad nach „Aufgabe2_Yan_Amin_Rust/program“.
-Mit „cargo run --release“ wird der Code kompiliert und ausgeführt. Dafür wird aber die Rust toolchain, welche man unter https://rustup.rs/ installieren kann.
-Das geht für Windows, Mac und Linux.
+Mit „cargo run --release“ wird der Code kompiliert und ausgeführt. Dafür wird aber die Rust toolchain benötigt, welche man unter https://rustup.rs/ installieren kann.
+Das geht für Windows, Mac und Linux. Cargo sollte dabei im PATH verfügbar sein.
